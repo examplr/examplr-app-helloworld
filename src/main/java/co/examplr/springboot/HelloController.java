@@ -16,11 +16,42 @@
  */
 package co.examplr.springboot;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 public class HelloController {
+
+    @GetMapping(value = "/s3/**")
+    public String getURLValue(HttpServletRequest request) {
+        StringBuilder out    = new StringBuilder("");
+        String        bucket = null;
+        String        key    = null;
+        String        uri    = null;
+        try {
+            uri = request.getRequestURI();
+            bucket = uri.substring(4, uri.indexOf('/', 4));
+            key = uri.substring(uri.indexOf('/', 5) + 1);
+
+            AmazonS3 s3   = AmazonS3ClientBuilder.defaultClient();
+            String   text = new String(s3.getObject(bucket, key).getObjectContent().readAllBytes(), StandardCharsets.UTF_8);
+            out.append(text);
+
+        } catch (Exception ex) {
+            out.append("\r\n<br> uri    = ").append(uri);
+            out.append("\r\n<br> bucket = ").append(bucket);
+            out.append("\r\n<br> key    = ").append(key);
+            out.append("\r\n<br>error = " + ExceptionUtils.getStackTrace(ex));
+        }
+        return out.toString();
+    }
+
 
     @GetMapping("/**")
     public String index() {
