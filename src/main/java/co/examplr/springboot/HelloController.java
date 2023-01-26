@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class HelloController {
@@ -55,7 +59,17 @@ public class HelloController {
 
     @GetMapping("/**")
     public String index() {
-        return "Hello World!";
+
+        StringBuilder       b   = new StringBuilder("Hello World!!!\r\n");
+        b.append("---------------------\r\n");
+        Map<String, String> env = System.getenv();
+
+        List<String> keys = new ArrayList(env.keySet());
+        Collections.sort(keys);
+        for(String key : keys){
+            b.append(key).append(" = ").append(env.get(key)).append("\r\n");
+        }
+        return b.toString();
     }
 
 }
