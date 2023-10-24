@@ -1,3 +1,6 @@
+#
+#
+# https://stackoverflow.com/questions/58177786/get-the-current-pushed-tag-in-github-actions
 
 name: AWS ECR push
 
@@ -36,5 +39,5 @@ jobs:
           # Build a docker container and push it to ECR 
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} .  
           echo "Pushing image to ECR..."
-          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
