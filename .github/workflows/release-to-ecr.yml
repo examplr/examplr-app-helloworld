@@ -37,7 +37,7 @@ jobs:
           IMAGE_TAG: ${{  github.ref_name }}
         run: |
           # Build a docker container and push it to ECR 
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  -t $ECR_REGISTRY/$ECR_REPOSITORY:`git rev-parse --short HEAD` .  
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  -t $ECR_REGISTRY/$ECR_REPOSITORY:`git rev-parse --short HEAD` -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .  
           echo "Pushing image to ECR..."
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
